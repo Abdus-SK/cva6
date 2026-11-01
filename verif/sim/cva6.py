@@ -984,7 +984,7 @@ def check_cc_version():
 
   cc_path = get_env_var("RISCV_CC")
   cc_version = run_cmd(f"{cc_path} --version")
-  cc_version_string = cc_version.split("\n")[0].split(" ")[2]
+  cc_version_string = cc_version.split("\n")[0].split(" ")[-1]
   cc_version_number = re.split(r'\D+', cc_version_string)
 
   logging.info(f"GCC Version: {cc_version_string}")
