@@ -99,6 +99,23 @@ GCC 13), and CMake 4 refuses projects declaring a minimum below 3.5.
 
 Note: `verif/tests/custom/Zcmp/` has its own copies of the same `__thread` lines (not fixed, not used yet).
 
+## Scalar baseline: 8x8 matmul (verif/tests/custom/fyp/matmul8x8.c)
+
+cv64a6_imafdc_sv39, -O2, second (warm) run of each kernel, counters mcycle/minstret.
+Correctness: Spike vs RTL 28192 instructions matched; self-check SUCCESS for all four types.
+
+| Type | Cycles | Instructions | IPC | Cycles/MAC |
+|---|---|---|---|---|
+| int8 -> int32 | 5051 | 4088 | 0.81 | 9.87 |
+| int16 -> int32 | 5046 | 4089 | 0.81 | 9.86 |
+| fp32 | 4392 | 3577 | 0.81 | 8.58 |
+| fp64 | 3960 | 3578 | 0.90 | 7.73 |
+
+Notes: IPC near 1, so the cost is instruction count (about 7-8 per MAC). FP uses fmadd (1 instr/MAC),
+integer needs mul + add. int8 = int16 on a scalar core. fp64 < fp32 not yet explained.
+Run: `bash fyp-notes/run-c.sh cv64a6_imafdc_sv39 verif/tests/custom/fyp/matmul8x8.c` (correctness), then
+`... veri-testharness -DFYP_COUNT` and `python3 fyp-notes/csr-deltas.py verif/sim/trace_rvfi_hart_00.dasm`.
+
 ## Results
 
 | Date | Target | Result | Log |
@@ -110,6 +127,7 @@ Note: `verif/tests/custom/Zcmp/` has its own copies of the same `__thread` lines
 | 2026-11-03 | cv32a65x (recheck after linker change) | PASSED, 717 matched | |
 | 2026-11-03 | **cv64a6_imafdc_sv39 (FYP base)** | PASSED, 780 matched, 63 s | `logs/hello-cv64a6_imafdc_sv39.log` |
 
+
 ## Gotchas
 
 - The scripts' exit code is not reliable (0 even on failure). Always read the log.
@@ -119,6 +137,10 @@ Note: `verif/tests/custom/Zcmp/` has its own copies of the same `__thread` lines
 - The official test suites (riscv-tests, riscv-compliance, riscv-arch-test) are not installed yet.
 - `.gitignore` line 25 (`*.log`) ignores logs everywhere: add evidence logs with `git add -f`.
 - `run-hello.sh` uses a target's own `config/gen_from_riscv_config/<target>/linker/link.ld` if it exists, else the generic one.
+- RTL tests must not printf: the Verilator testbench never answers print syscalls, so the core waits in `while (fromhost == 0)` until the 2M-cycle limit. Self-check and report via the exit code (tohost = 2*code+1).
+- hello_world never hangs only because its printf text has no `\n` (never flushed).
+- The RVFI trace pads single-digit registers (`x 9`); parse with `x\s*(\d+)`.
+- Spike-vs-RTL compare cannot include mcycle reads (different cycle counts): measure in a separate Verilator-only run.
 ## Journal
 
 - **2026-10-23**: Tool inventory, forked CVA6, cloned, pinned commit, tagged `fyp-base`, fetched submodules.
@@ -126,9 +148,11 @@ Note: `verif/tests/custom/Zcmp/` has its own copies of the same `__thread` lines
 - **2026-11-02**: Fixed `cva6.py` and `syscalls.c`; cv32a65x hello world passed. Logged in with `gh`, pushed. Fixed `util.h`; cv32a6_imac_sv32 passed. Pushed.
 - **2026-11-03**: Moved env file and hello script into `fyp-notes/`, made them location-independent; cv32a65x passed through them. Wrote this journal.
 - **2026-11-03**: Compared configs. Supervisor requires RV64 + floating point, so the base is cv64a6_imafdc_sv39 (CV-X-IF on, single-issue). Made the linker choice general in `run-hello.sh`. Hello world passed on cv32a60x (717) and cv64a6_imafdc_sv39 (780). Tagged `fyp-cv64-base`.
+- **2026-11-03**: Wrote 8x8 matmul baseline (int8, int16, fp32, fp64), self-checking, plus `run-c.sh` and `csr-deltas.py`. Found the printf/fromhost hang. Baseline measured (table above). Tagged `fyp-baseline-matmul8x8`.
 
 ## Next steps
 1. Run the official suites (riscv-tests, riscv-arch-test, riscv-compliance) on cv64a6_imafdc_sv39 as a baseline.
 2. Study CV-X-IF in this CVA6: interface signals, the example coprocessor, and whether the memory interface exists.
 3. Define the custom instructions and the 256-bit vector register file; prototype with `.insn`.
 4. Check FPGA fit: CVA6 area vs DE10 / DE25.
+0. Baseline done for 8x8. Later: larger sizes (16, 32, 64) to see cache effects.

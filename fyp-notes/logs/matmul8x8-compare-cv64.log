@@ -1,0 +1,91 @@
+[install-verilator.sh] Entry values:
+    VERILATOR_BUILD_DIR=''
+    VERILATOR_INSTALL_DIR='/home/BlazeringNoctal/FYP/fyp/cva6/tools/verilator-v5.008'
+Setting VERILATOR_BUILD_DIR to '/home/BlazeringNoctal/FYP/fyp/cva6/tools/verilator-v5.008/build-v5.008'...
+Verilator already installed in '/home/BlazeringNoctal/FYP/fyp/cva6/tools/verilator-v5.008'.
+Spike already installed in '/home/BlazeringNoctal/FYP/fyp/cva6/tools/spike'.
+FYP-RUN target=cv64a6_imafdc_sv39 file=/home/BlazeringNoctal/FYP/fyp/cva6/verif/tests/custom/fyp/matmul8x8.c simulators=veri-testharness,spike extra=
+make: Entering directory '/home/BlazeringNoctal/FYP/fyp/cva6'
+Makefile:52: must set CVA6_REPO_DIR to point at the root of CVA6 sources -- doing it for you...
+Makefile:153: XCELIUM_HOME not set which is necessary for compiling DPIs when using XCELIUM
+rm -rf tmp/riscv-torture/output/test*
+rm -rf work/ work-dpi/ work-ver/ work-vcs/
+rm -f tmp/*.ucdb tmp/*.log *.wlf *vstf wlft* *.ucdb
+make -C corev_apu/fpga clean
+make[1]: Entering directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga'
+rm -rf *.log *.jou *.str *.mif *.xpr work-fpga ariane.cache ariane.hw ariane.ip_user_files scripts/vivado*
+make[1]: Leaving directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga'
+make -C corev_apu/fpga/src/bootrom BOARD=genesys2 XLEN=64 clean
+make[1]: Entering directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga/src/bootrom'
+rm -f src/main.o src/uart.o src/spi.o src/sd.o src/gpt.o src/dw_mmc.o src/bouncebuf.o startup.o bootrom_64.elf bootrom_64.bin bootrom_64.img *.dtb *.dts *.sv
+rm -f ./bootrom_32.h ./bootrom_64.h
+make[1]: Leaving directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga/src/bootrom'
+make: Leaving directory '/home/BlazeringNoctal/FYP/fyp/cva6'
+Makefile:14: must set CVA6_REPO_DIR to point at the root of CVA6 sources and CVA6_TB_DIR to point here -- doing it for you...
+basename: missing operand
+Try 'basename --help' for more information.
+[VCS] Cleanup (entire vcs_work dir)
+rm -rf /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/vcs_results/ verdiLog/ simv* *.daidir *.vpd *.fsdb *.db csrc ucli.key vc_hdrs.h novas* inter.fsdb uart
+rm -f *.txt
+rm -f trace*.log
+rm -f trace*.dasm
+rm -f *.vpd *.fsdb *.vcd *.fst
+rm -f *.trace
+Tue, 03 Nov 2026 13:08:21 INFO     GCC Version: 16.2.0
+Tue, 03 Nov 2026 13:08:21 INFO     Spike Version: 1.1.1-dev b3149ab0
+Tue, 03 Nov 2026 13:08:21 INFO     Verilator Version: Verilator 5.008 2023-03-04 rev v5.008 (mod)
+Tue, 03 Nov 2026 13:08:21 INFO     Creating output directory: /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03
+Tue, 03 Nov 2026 13:08:21 INFO     Iteration number: 1
+Tue, 03 Nov 2026 13:08:21 INFO     Compiling test: /home/BlazeringNoctal/FYP/fyp/cva6/verif/tests/custom/fyp/matmul8x8.c
+Tue, 03 Nov 2026 13:08:21 INFO     Compilation cmd: /home/BlazeringNoctal/FYP/fyp/riscv/bin/riscv64-elf-gcc /home/BlazeringNoctal/FYP/fyp/cva6/verif/tests/custom/fyp/matmul8x8.c               -I/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/dv/user_extension                 -T../../config/gen_from_riscv_config/linker/link.ld -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -g -O2  ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -I../tests/custom/env -I../tests/custom/common -lgcc -nostdlib -lgcc -o /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o  -march=rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh -mabi=lp64d
+Tue, 03 Nov 2026 13:08:21 INFO     Processing ISS setup file: cva6.yaml
+Tue, 03 Nov 2026 13:08:21 INFO     Found matching ISS: spike
+Tue, 03 Nov 2026 13:08:21 INFO     Target: cv64a6_imafdc_sv39
+Tue, 03 Nov 2026 13:08:21 INFO     ISA rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh
+Tue, 03 Nov 2026 13:08:21 INFO     [spike] Running ISS simulation: make spike steps=2000000 target=cv64a6_imafdc_sv39 variant=rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh priv=msu elf=/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o tool_path=/home/BlazeringNoctal/FYP/fyp/cva6/tools/spike/bin log=/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/spike_sim/matmul8x8.cv64a6_imafdc_sv39.log spike_params='' &> /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/spike_sim/matmul8x8.cv64a6_imafdc_sv39.log.iss
+Tue, 03 Nov 2026 13:08:27 INFO     [spike] Running ISS simulation: /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o ...done
+Tue, 03 Nov 2026 13:08:27 INFO     Processing ISS setup file: cva6.yaml
+Tue, 03 Nov 2026 13:08:27 INFO     Found matching ISS: veri-testharness
+Tue, 03 Nov 2026 13:08:27 INFO     Target: cv64a6_imafdc_sv39
+Tue, 03 Nov 2026 13:08:27 INFO     ISA rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh
+Tue, 03 Nov 2026 13:08:27 INFO     [veri-testharness] Running ISS simulation: make veri-testharness target=cv64a6_imafdc_sv39 variant=rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh elf=/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o path_var=/home/BlazeringNoctal/FYP/fyp/cva6/ tool_path=/home/BlazeringNoctal/FYP/fyp/cva6/tools/spike/bin isscomp_opts="" issrun_opts="+debug_disable=1+UVM_VERBOSITY=UVM_NONE +ntb_random_seed=10672584" isspostrun_opts="0x0000000080000000" log=/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/veri-testharness_sim/matmul8x8.cv64a6_imafdc_sv39.log &> /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/veri-testharness_sim/matmul8x8.cv64a6_imafdc_sv39.log.iss
+Tue, 03 Nov 2026 13:09:37 INFO     [veri-testharness] Running ISS simulation: /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o ...done
+Tue, 03 Nov 2026 13:09:37 INFO     Processing spike log : /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/spike_sim/matmul8x8.cv64a6_imafdc_sv39.log
+Tue, 03 Nov 2026 13:09:38 INFO     Processed instruction count : 35577
+Tue, 03 Nov 2026 13:09:38 INFO     CSV saved to : /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/spike_sim/matmul8x8.cv64a6_imafdc_sv39.csv
+Tue, 03 Nov 2026 13:09:38 INFO     Processing verilator log : /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/veri-testharness_sim/matmul8x8.cv64a6_imafdc_sv39.log
+Tue, 03 Nov 2026 13:09:38 INFO     Processed instruction count : 35578
+Tue, 03 Nov 2026 13:09:38 INFO     CSV saved to : /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/veri-testharness_sim/matmul8x8.cv64a6_imafdc_sv39.csv
+Tue, 03 Nov 2026 13:09:38 INFO     [PASSED]: 28192 matched
+
+Tue, 03 Nov 2026 13:09:38 INFO     Processing ISS setup file: cva6.yaml
+Tue, 03 Nov 2026 13:09:38 INFO     Found matching ISS: spike
+Tue, 03 Nov 2026 13:09:38 INFO     Target: cv64a6_imafdc_sv39
+Tue, 03 Nov 2026 13:09:38 INFO     ISA rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh
+Tue, 03 Nov 2026 13:09:38 INFO     spike sim log dir: /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/spike_sim
+Tue, 03 Nov 2026 13:09:38 INFO     Processing ISS setup file: cva6.yaml
+Tue, 03 Nov 2026 13:09:38 INFO     Found matching ISS: veri-testharness
+Tue, 03 Nov 2026 13:09:38 INFO     Target: cv64a6_imafdc_sv39
+Tue, 03 Nov 2026 13:09:38 INFO     ISA rv64gc_zba_zbb_zbs_zbc_zbkb_zbkx_zkne_zknd_zknh
+Tue, 03 Nov 2026 13:09:38 INFO     veri-testharness sim log dir: /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/veri-testharness_sim
+Tue, 03 Nov 2026 13:09:38 INFO     5 PASSED, 0 FAILED
+Tue, 03 Nov 2026 13:09:38 INFO     ISS regression report is saved to /home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/iss_regr.log
+
+/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o
+/home/BlazeringNoctal/FYP/fyp/cva6/verif/sim/out_2026-11-03/directed_tests/matmul8x8.o
+make: Entering directory '/home/BlazeringNoctal/FYP/fyp/cva6'
+Makefile:52: must set CVA6_REPO_DIR to point at the root of CVA6 sources -- doing it for you...
+Makefile:153: XCELIUM_HOME not set which is necessary for compiling DPIs when using XCELIUM
+rm -rf tmp/riscv-torture/output/test*
+rm -rf work/ work-dpi/ work-ver/ work-vcs/
+rm -f tmp/*.ucdb tmp/*.log *.wlf *vstf wlft* *.ucdb
+make -C corev_apu/fpga clean
+make[1]: Entering directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga'
+rm -rf *.log *.jou *.str *.mif *.xpr work-fpga ariane.cache ariane.hw ariane.ip_user_files scripts/vivado*
+make[1]: Leaving directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga'
+make -C corev_apu/fpga/src/bootrom BOARD=genesys2 XLEN=64 clean
+make[1]: Entering directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga/src/bootrom'
+rm -f src/main.o src/uart.o src/spi.o src/sd.o src/gpt.o src/dw_mmc.o src/bouncebuf.o startup.o bootrom_64.elf bootrom_64.bin bootrom_64.img *.dtb *.dts *.sv
+rm -f ./bootrom_32.h ./bootrom_64.h
+make[1]: Leaving directory '/home/BlazeringNoctal/FYP/fyp/cva6/corev_apu/fpga/src/bootrom'
+make: Leaving directory '/home/BlazeringNoctal/FYP/fyp/cva6'

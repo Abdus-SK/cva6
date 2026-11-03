@@ -1,0 +1,6 @@
+found 8 mcycle and 8 minstret reads
+kernel      cycles   instret     IPC  cycles/MAC
+int8          5051      4088    0.81        9.87
+int16         5046      4089    0.81        9.86
+fp32          4392      3577    0.81        8.58
+fp64          3960      3578    0.90        7.73
