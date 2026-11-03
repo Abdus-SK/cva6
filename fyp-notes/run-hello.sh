@@ -10,7 +10,7 @@ export UVM_VERBOSITY=UVM_NONE
 export DV_OPTS="$DV_OPTS --issrun_opts=+debug_disable=1+UVM_VERBOSITY=$UVM_VERBOSITY"
 CC_OPTS="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -I../tests/custom/env -I../tests/custom/common -lgcc"
 LINKER=../../config/gen_from_riscv_config/linker/link.ld
-[ "$TARGET" = "cv32a65x" ] && LINKER=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld
+[ -f "config/gen_from_riscv_config/$TARGET/linker/link.ld" ] && LINKER="../../config/gen_from_riscv_config/$TARGET/linker/link.ld"
 cd verif/sim
 make -C ../.. clean
 make clean_all

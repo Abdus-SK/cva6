@@ -18,6 +18,24 @@ new chat to resume work.
 Rules: never press GitHub's "Sync fork". Compare against the base with
 `git diff fyp-base`. Submodule versions are locked by the pinned commit.
 
+## FYP base configuration: cv64a6_imafdc_sv39
+
+| Setting | Value | Why it matters |
+|---|---|---|
+| XLEN | 64 | Supervisor requires RV64 |
+| F, D | on | Supervisor requires floating point |
+| CvxifEn | 1 | Coprocessor port for the matrix engine and vector-lite unit |
+| SuperscalarEn | 0 | Single-issue (NrCommitPorts 2 = two can retire per cycle, not dual issue) |
+| MmuPresent | 1 (sv39) | Not needed for bare metal; harmless |
+| Linker | generic `config/gen_from_riscv_config/linker/link.ld` | No target-specific one |
+
+Default target in the Makefile (line 104). Rejected: cv32a65x (dual-issue, 32-bit), cv32a6_imac_sv32 (no CV-X-IF),
+cv32a60x (32-bit, no FPU). All three still pass hello world.
+
+Open design question: vectors are 256-bit (int32 x 8), four times XLEN, so the vector-lite unit needs its own
+register file. Check whether this CVA6 implements the CV-X-IF memory interface (coprocessor loads/stores).
+FPGA target: DE10 (Cyclone V) or DE25; CVA6's FPGA flow is Xilinx-based, so a Quartus port and area check are needed.
+
 ## Machine and tools
 
 - Arch Linux, kernel 7.2.11-arch1-1, fish shell, VSCodium. 12 cores, 7.2 GiB RAM (the limit, so `NUM_JOBS=4`), zram + 4 GB swap.
@@ -88,6 +106,9 @@ Note: `verif/tests/custom/Zcmp/` has its own copies of the same `__thread` lines
 | 2026-11-02 | cv32a65x | PASSED, 717 matched | |
 | 2026-11-02 | cv32a6_imac_sv32 | PASSED, 717 matched | `logs/hello-cv32a6_imac_sv32-run2.log` |
 | 2026-11-03 | cv32a65x (via `fyp-notes/run-hello.sh`) | PASSED, 717 matched | `logs/hello-cv32a65x-run4.log` |
+| 2026-11-03 | cv32a60x (own linker script) | PASSED, 717 matched | `logs/hello-cv32a60x-run5.log` |
+| 2026-11-03 | cv32a65x (recheck after linker change) | PASSED, 717 matched | |
+| 2026-11-03 | **cv64a6_imafdc_sv39 (FYP base)** | PASSED, 780 matched, 63 s | `logs/hello-cv64a6_imafdc_sv39.log` |
 
 ## Gotchas
 
@@ -96,16 +117,18 @@ Note: `verif/tests/custom/Zcmp/` has its own copies of the same `__thread` lines
 - fish: quote wildcards in arguments (`'--include=*.py'`); use `git --no-pager` (no `less` installed).
 - `smoke-gen_tests.sh` defaults to a commercial simulator (vcs-uvm); skipped.
 - The official test suites (riscv-tests, riscv-compliance, riscv-arch-test) are not installed yet.
-
+- `.gitignore` line 25 (`*.log`) ignores logs everywhere: add evidence logs with `git add -f`.
+- `run-hello.sh` uses a target's own `config/gen_from_riscv_config/<target>/linker/link.ld` if it exists, else the generic one.
 ## Journal
 
 - **2026-10-23**: Tool inventory, forked CVA6, cloned, pinned commit, tagged `fyp-base`, fetched submodules.
 - **2026-10-31**: System update (for help2man), built `$RISCV` link folder, Verilator 5.008 and Spike.
 - **2026-11-02**: Fixed `cva6.py` and `syscalls.c`; cv32a65x hello world passed. Logged in with `gh`, pushed. Fixed `util.h`; cv32a6_imac_sv32 passed. Pushed.
 - **2026-11-03**: Moved env file and hello script into `fyp-notes/`, made them location-independent; cv32a65x passed through them. Wrote this journal.
+- **2026-11-03**: Compared configs. Supervisor requires RV64 + floating point, so the base is cv64a6_imafdc_sv39 (CV-X-IF on, single-issue). Made the linker choice general in `run-hello.sh`. Hello world passed on cv32a60x (717) and cv64a6_imafdc_sv39 (780). Tagged `fyp-cv64-base`.
 
 ## Next steps
-
-1. Choose the base configuration for the accelerator (cv32a65x vs cv32a6_imac_sv32).
-2. Study CV-X-IF (the coprocessor interface) as the attachment point for the matrix engine and vector-lite unit.
-3. Install the official test suites as a regression check before modifying the core.
+1. Run the official suites (riscv-tests, riscv-arch-test, riscv-compliance) on cv64a6_imafdc_sv39 as a baseline.
+2. Study CV-X-IF in this CVA6: interface signals, the example coprocessor, and whether the memory interface exists.
+3. Define the custom instructions and the 256-bit vector register file; prototype with `.insn`.
+4. Check FPGA fit: CVA6 area vs DE10 / DE25.
